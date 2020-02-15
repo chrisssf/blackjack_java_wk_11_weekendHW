@@ -9,13 +9,13 @@ public class Runner {
 
         dealer.dealCards();
         System.out.println(dealer.getDealerFirstCard());
-        System.out.println("Player current score is " + dealer.getPlayerScore());
+        System.out.println("Player's current score is " + dealer.getPlayerScore());
         System.out.println("Player's cards: " + dealer.getPlayerCards());
-        System.out.println("To get another card type twist, to keep current score type stick");
+        System.out.println("To get another card type twist(or t), to keep current score type stick(or s)");
 
 
         String input = scanner.next();
-        while (!input.equals("s")){
+        while (!input.equals("stick") && !input.equals("s")){
             if (input.equals("twist") || input.equals("t")){
                 dealer.givePlayerCard(dealer.getPlayer1());
                 System.out.println("Player current score is " + dealer.getPlayerScore());

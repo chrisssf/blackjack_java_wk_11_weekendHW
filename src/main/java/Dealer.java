@@ -8,8 +8,6 @@ public class Dealer {
     private ArrayList<Card> hand;
     private String dealerCards;
     private String playerCards;
-    private int dealerAces;
-    private int playerAces;
 
 
 
@@ -20,8 +18,6 @@ public class Dealer {
         this.hand = new ArrayList<Card>();
         this.dealerCards = "";
         this.playerCards = "";
-        this.dealerAces = 0;
-        this.playerAces = 0;
     }
 
 
@@ -72,17 +68,16 @@ public class Dealer {
     public int getPlayerScore(){
         int playerScore = 0;
         this.playerCards = "";
-        this.playerAces = 0;
+        int playerAces = 0;
         for (Card card : this.player1.getHand()){
             playerScore += card.getRank().getScore();
             this.playerCards = this.playerCards + card.getRank() + " of " + card.getSuit() + ", ";
             if (card.getRank() == RankType.ACE){
-                this.playerAces += 1;
+                playerAces += 1;
             }
         }
-        if (playerScore > 21 && this.playerAces > 0){
+        if (playerScore > 21 && playerAces > 0){
             playerScore -= 10;
-            this.playerAces -= 1;
         }
         return playerScore;
     }
@@ -90,16 +85,16 @@ public class Dealer {
     public int getDealerScore(){
         int dealerScore = 0;
         this.dealerCards = "";
+        int dealerAces = 0;
         for (Card card : this.hand){
             dealerScore += card.getRank().getScore();
             this.dealerCards = this.dealerCards + card.getRank() + " of " + card.getSuit() + ", ";
             if (card.getRank() == RankType.ACE){
-                this.dealerAces += 1;
+                dealerAces += 1;
             }
         }
-        if (dealerScore > 21 && this.dealerAces > 0){
+        if (dealerScore > 21 && dealerAces > 0){
             dealerScore -= 10;
-            this.dealerAces -= 1;
         }
         return dealerScore;
     }
@@ -111,23 +106,11 @@ public class Dealer {
 
 
     public String pickWinner(){
-//        int playerScore = 0;
-//        int dealerScore = 0;
-//        for (Card card : this.player1.getHand()){
-//            playerScore += card.getRank().getScore();
-//        }
-//        for (Card card : this.hand){
-//            dealerScore += card.getRank().getScore();
-//        }
         int playerScore = this.getPlayerScore();
         int dealerScore = this.getDealerScore();
         while ( dealerScore <= 16){
             this.giveDealerCard();
             dealerScore = this.getDealerScore();
-//            if (dealerScore > 21 && this.dealerAces > 0){
-//                dealerScore -= 10;
-//                this.dealerAces -= 1;
-//            }
         }
         if (playerScore > dealerScore && playerScore <= 21 || playerScore <= 21 && dealerScore > 21){
             return "Player Wins!!! with " + playerScore + ", Dealer's score " + dealerScore;
