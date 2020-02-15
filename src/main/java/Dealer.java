@@ -6,6 +6,11 @@ public class Dealer {
     private Player player1;
     private Player player2;
     private ArrayList<Card> hand;
+    private String dealerCards;
+    private String playerCards;
+    private int dealerAces;
+    private int playerAces;
+
 
 
     public Dealer(){
@@ -13,6 +18,10 @@ public class Dealer {
         this.player1 = new Player("Uno");
         this.player2 = new Player("Dos");
         this.hand = new ArrayList<Card>();
+        this.dealerCards = "";
+        this.playerCards = "";
+        this.dealerAces = 0;
+        this.playerAces = 0;
     }
 
 
@@ -22,6 +31,18 @@ public class Dealer {
 
     public ArrayList<Card> getHand() {
         return hand;
+    }
+
+    public Player getPlayer1() {
+        return player1;
+    }
+
+    public String getDealerCards() {
+        return dealerCards;
+    }
+
+    public String getPlayerCards() {
+        return playerCards;
     }
 
     public void populateDeck(){
@@ -48,21 +69,72 @@ public class Dealer {
         this.giveDealerCard();
     }
 
-    public String pickWinner(){
+    public int getPlayerScore(){
         int playerScore = 0;
-        int dealerScore = 0;
+        this.playerCards = "";
+        this.playerAces = 0;
         for (Card card : this.player1.getHand()){
             playerScore += card.getRank().getScore();
+            this.playerCards = this.playerCards + card.getRank() + " of " + card.getSuit() + ", ";
+            if (card.getRank() == RankType.ACE){
+                this.playerAces += 1;
+            }
         }
+        if (playerScore > 21 && this.playerAces > 0){
+            playerScore -= 10;
+            this.playerAces -= 1;
+        }
+        return playerScore;
+    }
+
+    public int getDealerScore(){
+        int dealerScore = 0;
+        this.dealerCards = "";
         for (Card card : this.hand){
             dealerScore += card.getRank().getScore();
+            this.dealerCards = this.dealerCards + card.getRank() + " of " + card.getSuit() + ", ";
+            if (card.getRank() == RankType.ACE){
+                this.dealerAces += 1;
+            }
         }
-        if (playerScore > dealerScore){
-            return "Player Wins";
-        } else if (playerScore < dealerScore){
-            return "Dealer Wins";
+        if (dealerScore > 21 && this.dealerAces > 0){
+            dealerScore -= 10;
+            this.dealerAces -= 1;
+        }
+        return dealerScore;
+    }
+
+    public String getDealerFirstCard(){
+        Card card = this.hand.get(0);
+        return "Dealer's face up card is " + card.getRank() + " of " + card.getSuit();
+    }
+
+
+    public String pickWinner(){
+//        int playerScore = 0;
+//        int dealerScore = 0;
+//        for (Card card : this.player1.getHand()){
+//            playerScore += card.getRank().getScore();
+//        }
+//        for (Card card : this.hand){
+//            dealerScore += card.getRank().getScore();
+//        }
+        int playerScore = this.getPlayerScore();
+        int dealerScore = this.getDealerScore();
+        while ( dealerScore <= 16){
+            this.giveDealerCard();
+            dealerScore = this.getDealerScore();
+//            if (dealerScore > 21 && this.dealerAces > 0){
+//                dealerScore -= 10;
+//                this.dealerAces -= 1;
+//            }
+        }
+        if (playerScore > dealerScore && playerScore <= 21 || playerScore <= 21 && dealerScore > 21){
+            return "Player Wins!!! with " + playerScore + ", Dealer's score " + dealerScore;
+        } else if (playerScore == dealerScore && playerScore <= 21){
+            return "Draw, both scored " + dealerScore;
         } else {
-            return "Draw";
+            return "Dealer Wins!!! with " + dealerScore+ ", Player's score " + playerScore;
         }
     }
 
