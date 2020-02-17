@@ -112,7 +112,9 @@ public class Dealer {
             this.giveDealerCard();
             dealerScore = this.getDealerScore();
         }
-        if (playerScore > dealerScore && playerScore <= 21 || playerScore <= 21 && dealerScore > 21){
+        if (playerScore > 21) {
+            return "Player Loses!!! bust with " + playerScore;
+        } else if (playerScore > dealerScore && playerScore <= 21 || playerScore <= 21 && dealerScore > 21){
             return "Player Wins!!! with " + playerScore + ", Dealer's score " + dealerScore;
         } else if (playerScore == dealerScore && playerScore <= 21){
             return "Draw, both scored " + dealerScore;
